@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 	  grunt.initConfig({
+		src_path: 'src/views',
+		dist_path: 'dist/views',
 		pkg: grunt.file.readJSON('package.json'),
   
 	  concat: {
@@ -9,9 +11,9 @@ module.exports = function(grunt) {
 		  },
 		  dist: {
 			// the files to concatenate
-			src: ['src/views/js/*.js'],
+			src: ['<%= src_path %>/js/*.js'],
 			// the location of the resulting JS file
-			dest: 'src/views/js/<%= pkg.name %>.js'
+			dest: '<%= src_path %>/js/<%= pkg.name %>.js'
 		  }
 		},
 	
@@ -22,7 +24,7 @@ module.exports = function(grunt) {
 				 collapseWhitespace: true
 			  },
 			  files: {
-				 'dist/views/pizza.html' : 'src/views/*.html'
+				 '<%= dist_path %>/*.html' : '<%= src_path %>/*.html' /* destination : source */
 			  }
 		   }
 		},
@@ -36,7 +38,7 @@ module.exports = function(grunt) {
 	  },
 	  dist: {
 		files: {
-		  'dist/views/js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+		  '<%= src_path %>/views/js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
 		}
 	  }
 	},
@@ -48,7 +50,7 @@ module.exports = function(grunt) {
 			 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 		  },
 		  files: {
-			 'dist/views/css/style.min.css': ['src/views/**/*.css']
+			 '<%= dist_path %>/css/style.min.css': ['<%= src_path %>/**/*.css']
 		  }
 	  }
 	},
@@ -61,9 +63,9 @@ module.exports = function(grunt) {
 		  },
 		  files: [{
 			 expand: true,
-			 cwd: 'src/views/images',
+			 cwd: 'src/img/',
 			 src: ['**/*.{png,jpg,gif}'],
-			 dest: 'dist/views/images'
+			 dest: 'src/img/'
 		  }]
 	   }
 	},
@@ -107,5 +109,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   
   grunt.registerTask('default', ['jshint', 'imagemin', 'htmlmin', 'cssmin', 'concat', 'uglify']);
+  grunt.registerTask('miniimg', ['imagemin']);
   
 };
