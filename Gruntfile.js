@@ -50,7 +50,8 @@ module.exports = function(grunt) {
 			 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 		  },
 		  files: {
-			 '<%= dist_path %>/css/style.css': ['<%= src_path %>/**/*.css']
+			 '<%= dist_path %>/css/style.css': ['<%= src_path %>/css/style.css'],
+			 '<%= dist_path %>/css/bootstrap-grid.css': ['<%= src_path %>/css/bootstrap-grid.css']
 		  }
 	  }
 	},
