@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 		src_path: 'src/views',
 		dist_path: 'dist/views',
 		pkg: grunt.file.readJSON('package.json'),
-  
+  /*
 	  concat: {
 		  options: {
 			// define a string to put between each file in the concatenated output
@@ -13,10 +13,10 @@ module.exports = function(grunt) {
 			// the files to concatenate
 			src: ['<%= src_path %>/js/*.js'],
 			// the location of the resulting JS file
-			dest: '<%= src_path %>/js/<%= pkg.name %>.js'
+			dest: '<%= src_path %>/js/main.js'
 		  }
 		},
-	
+	*/
 		htmlmin: {
 		   dist: {
 			  options: {
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 				 collapseWhitespace: true
 			  },
 			  files: {
-				 '<%= dist_path %>/*.html' : '<%= src_path %>/*.html' /* destination : source */
+				 '<%= dist_path %>/pizza.html' : '<%= src_path %>/*.html' /* destination : source */
 			  }
 		   }
 		},
@@ -32,13 +32,13 @@ module.exports = function(grunt) {
   /* MINIFY JS */
   uglify: {
 	  options: {
-		  sourceMap: true,
+		sourceMap: true,
 		// the banner is inserted at the top of the output
 		banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 	  },
 	  dist: {
 		files: {
-		  '<%= src_path %>/views/js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+		  '<%= dist_path %>/js/main.js': ['<%= src_path %>/js/main.js']
 		}
 	  }
 	},
@@ -50,24 +50,25 @@ module.exports = function(grunt) {
 			 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 		  },
 		  files: {
-			 '<%= dist_path %>/css/style.min.css': ['<%= src_path %>/**/*.css']
+			 '<%= dist_path %>/css/style.css': ['<%= src_path %>/**/*.css']
 		  }
 	  }
 	},
 	
 	/* MINIFY IMAGES */
 	imagemin: {
-	   dist: {
-		  options: {
-			optimizationLevel: 5
-		  },
-		  files: [{
-			 expand: true,
-			 cwd: 'src/img/',
-			 src: ['**/*.{png,jpg,gif}'],
-			 dest: 'src/img/'
-		  }]
-	   }
+		dist: {
+			options: {
+				optimizationLevel: 5,
+				progressive: true
+			},
+			files: [{
+				expand: true,
+				cwd: '<%= src_path %>/images/',
+				src: ['**/*.{png,jpg,gif}'],
+				dest: '<%= dist_path %>/images/'
+			}]
+		}
 	},
 	
 	jshint: {
@@ -106,9 +107,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
+  //grunt.loadNpmTasks('grunt-contrib-concat');
   
-  grunt.registerTask('default', ['jshint', 'imagemin', 'htmlmin', 'cssmin', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'imagemin', 'htmlmin', 'cssmin', 'uglify']);
   grunt.registerTask('miniimg', ['imagemin']);
   
 };
