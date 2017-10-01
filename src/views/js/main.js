@@ -18,29 +18,23 @@ cameron *at* udacity *dot* com
 var pizzaWithIngredients = "";
 var pizzaRandomlyNamed = "";
 //Relevant pizza making code moved to web-worker and associated script.
-var pizzaMakingWorker = new Worker("pizza-worker.js");
+var pizzaMakingWorker = new Worker("js/pizza-worker.js");
 
-pizzaMakingWorker.postMessage({status: 'START'});
+pizzaMakingWorker.postMessage({status: 'PIZZA-NAME'});
   
  pizzaMakingWorker.onmessage = function(e){
 	var data = e.data;
 	  
-	var result = null;
-	  
 	if(data.status === "STARTED"){
-		result.message = "Worker Started!";
-		console.log(result.message);
+		console.log("Worker Started!");
 	}else if (data.status === "STOPPED"){
-		result.message = "Worker Stopped!";
-		console.log(result.message);
+		console.log("Worker Stopped!");
 		pizzaMakingWorker.terminate();
-	}else if (messageObject.status === "PIZZA-NAMED"){
-		result.rngPizzaName = data.rnp;
-		pizzaRandomlyNamed = result.rngPizzaName;
-		
+	}else if (data.status === "PIZZA-NAMED"){
+		pizzaRandomlyNamed = data.rnp;
+		pizzaWithIngredients = data.pizzaOrder;
 	}else{
-		result.pizza = data.pizzaOrder;
-		pizzaWithIngredients = result.pizza;
+		console.log(data.status);
 	  }
   };
 
@@ -78,8 +72,6 @@ var pizzaElementGenerator = function(i, pizzaWithIngredients, rngPizzaName) {
   pizzaDescriptionContainer.style.width="65%";
 
   pizzaName = document.createElement("h4");
-  
-  pizzaMakingWorker.postMessage({status: 'PIZZA-NAME'});
   
   pizzaName.innerHTML = rngPizzaName;
   pizzaDescriptionContainer.appendChild(pizzaName);

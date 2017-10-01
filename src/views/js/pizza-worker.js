@@ -1,5 +1,5 @@
 //Pizza making code
-includeScript("pizza-generator.js");
+importScripts("pizza-generator.js");
 
 this.onmessage = function(e) {
   var messageObject = e.data;
@@ -13,9 +13,9 @@ this.onmessage = function(e) {
   }else if (messageObject.status === "PIZZA-NAME"){
 	  result = {status: "PIZZA-NAMED"};
 	  var rngNamedPizza = self.randomName();
-	  result = {rnp: rngNamedPizza};
+	  result = {rnp: rngNamedPizza, pizzaOrder: pizzaReady};
   }else{
-	  result = {pizzaOrder: pizzaReady};
+	  result = {status: "NOTHING"};
   }
   this.postMessage(result);
 };
