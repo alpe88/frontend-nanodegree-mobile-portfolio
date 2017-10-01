@@ -15,36 +15,42 @@ Creator:
 Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
+var pizzaWithIngredients = "";
+var pizzaRandomlyNamed = "";
+//Relevant pizza making code moved to web-worker and associated script.
+var pizzaMakingWorker = new Worker("pizza-worker.js");
 
-
+pizzaMakingWorker.postMessage({status: 'START'});
+  
+ pizzaMakingWorker.onmessage = function(e){
+	var data = e.data;
+	  
+	var result = null;
+	  
+	if(data.status === "STARTED"){
+		result.message = "Worker Started!";
+		console.log(result.message);
+	}else if (data.status === "STOPPED"){
+		result.message = "Worker Stopped!";
+		console.log(result.message);
+		pizzaMakingWorker.terminate();
+	}else if (messageObject.status === "PIZZA-NAMED"){
+		result.rngPizzaName = data.rnp;
+		pizzaRandomlyNamed = result.rngPizzaName;
+		
+	}else{
+		result.pizza = data.pizzaOrder;
+		pizzaWithIngredients = result.pizza;
+	  }
+  };
 
 // Returns a string with random pizza ingredients nested inside <li> tags
-var makeRandomPizza = function() {
-  var pizza = "";
-  
-  var pizzaMakingWorker = new Worker("pizza-worker.js");
-  pizzaMakingWorker.postMessage({status: 'START'});
-  
-  pizzaMakingWorker.onmessage = function(e){
-	  var data = e.data;
-	  
-	  var result = null;
-	  
-	  if(data.status === "STARTED"){
-		  result = "Worker Started!";
-	  }else if (data.status === ""){
-		  result = "Worker Stopped!";
-		  pizzaMakingWorker.terminate();
-	  }else{
-		  result = data.pizzaOrder;
-		  pizza = result;
-	  }
-  }
+var makeRandomPizza = function(pizza) {
   return pizza;
 };
 
 // returns a DOM element for each pizza
-var pizzaElementGenerator = function(i) {
+var pizzaElementGenerator = function(i, pizzaWithIngredients, rngPizzaName) {
   var pizzaContainer,             // contains pizza title, image and list of ingredients
       pizzaImageContainer,        // contains the pizza image
       pizzaImage,                 // the pizza image itself
@@ -72,7 +78,10 @@ var pizzaElementGenerator = function(i) {
   pizzaDescriptionContainer.style.width="65%";
 
   pizzaName = document.createElement("h4");
-  pizzaName.innerHTML = randomName();
+  
+  pizzaMakingWorker.postMessage({status: 'PIZZA-NAME'});
+  
+  pizzaName.innerHTML = rngPizzaName;
   pizzaDescriptionContainer.appendChild(pizzaName);
 
   ul = document.createElement("ul");
@@ -155,7 +164,7 @@ window.performance.mark("mark_start_generating"); // collect timing data
 // This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
   var pizzasDiv = document.getElementById("randomPizzas");
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
+  pizzasDiv.appendChild(pizzaElementGenerator(i, pizzaWithIngredients, pizzaRandomlyNamed));
 }
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
