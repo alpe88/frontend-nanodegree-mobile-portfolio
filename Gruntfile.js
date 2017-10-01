@@ -38,7 +38,9 @@ module.exports = function(grunt) {
 	  },
 	  dist: {
 		files: {
-		  '<%= dist_path %>/js/main.js': ['<%= src_path %>/js/main.js']
+		  '<%= dist_path %>/js/main.js': ['<%= src_path %>/js/main.js'],
+		  '<%= dist_path %>/js/pizza-generator.js': ['<%= src_path %>/js/pizza-generator.js'],
+		  '<%= dist_path %>/js/pizza-worker.js': ['<%= src_path %>/js/pizza-worker.js']
 		}
 	  }
 	},
