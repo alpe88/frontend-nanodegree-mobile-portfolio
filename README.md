@@ -1,3 +1,12 @@
+## Instructions on how to run pizza shop website.
+
+1. Navigate to https://alpe88.github.io/frontend-nanodegree-mobile-portfolio/dist/views/pizza.html and preview website
+Alternatively, you can:
+2. Download/clone git repo
+3. Set up local server, pointing it to the dist folder
+4. Navigate to the pizza.html page on said local server.
+
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
