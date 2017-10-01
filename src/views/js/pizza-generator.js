@@ -316,23 +316,50 @@ var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
 
-var pizzaCompleted = "";
+// Returns a string with random pizza ingredients nested inside <li> tags
+function makeRandomPizza() {
+  var pizza = "";
 
-var numberOfMeats = Math.floor((Math.random() * 4));
+  var numberOfMeats = Math.floor((Math.random() * 4));
   var numberOfNonMeats = Math.floor((Math.random() * 3));
   var numberOfCheeses = Math.floor((Math.random() * 2));
 
   for (var i = 0; i < numberOfMeats; i++) {
-    pizzaCompleted = pizzaCompleted + ingredientItemizer(selectRandomMeat());
+    pizza = pizza + ingredientItemizer(selectRandomMeat());
   }
 
   for (var j = 0; j < numberOfNonMeats; j++) {
-    pizzaCompleted = pizzaCompleted + ingredientItemizer(selectRandomNonMeat());
+    pizza = pizza + ingredientItemizer(selectRandomNonMeat());
   }
 
   for (var k = 0; k < numberOfCheeses; k++) {
-    pizzaCompleted = pizzaCompleted + ingredientItemizer(selectRandomCheese());
+    pizza = pizza + ingredientItemizer(selectRandomCheese());
   }
 
-  pizzaCompleted = pizzaCompleted + ingredientItemizer(selectRandomSauce());
-  pizzaCompleted = pizzaCompleted + ingredientItemizer(selectRandomCrust());
+  pizza = pizza + ingredientItemizer(selectRandomSauce());
+  pizza = pizza + ingredientItemizer(selectRandomCrust());
+
+  return pizza;
+}
+
+// returns an element as string for each pizza
+function pizzaElementGenerator(i) {
+  var pizzaString,
+	pizzasName,
+	pizzasIngredients;
+	
+	pizzasName = randomName();
+	pizzasIngredients = makeRandomPizza();
+
+	pizzaString = '<div class="randomPizzaContainer" id="pizza'+ i +'" style="width: 33.33%; height: 325px;"><div style="width: 35%;"><img src="images/pizza.png" class="img-responsive"></div><div style="width: 65%;"><h4>'+ pizzasName +'</h4><ul>'+ pizzasIngredients +'</ul></div></div>';
+
+  return pizzaString;
+}
+
+function makeAllPizzasAsString(){
+	var stringOfPizza = "";
+	for (var i = 2; i < 100; i++) {
+		stringOfPizza += pizzaElementGenerator(i);
+	}
+	return stringOfPizza;
+}

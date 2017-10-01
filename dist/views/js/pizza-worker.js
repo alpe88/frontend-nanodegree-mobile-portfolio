@@ -1,4 +1,4 @@
-/*! frontend-nanodegree-mobile-portfolio 30-09-2017 */
+/*! frontend-nanodegree-mobile-portfolio 01-10-2017 */
 
-importScripts("pizza-generator.js"),this.onmessage=function(s){var t=s.data,a=null,e="";"START"===t.status?(e=self.pizzaCompleted,a={status:"STARTED"}):"STOP"===t.status?a={status:"STOPPED"}:"PIZZA-NAME"===t.status?(a={status:"PIZZA-NAMED"},a={rnp:self.randomName(),pizzaOrder:e}):a={status:"NOTHING"},this.postMessage(a)};
+importScripts("pizza-generator.js"),onmessage=function(s){var a=s.data;console.log("Data received from main: ",a);var t={status:"",allThesePizzas:"not set"};"START"===a.status?t={status:"STARTED"}:"STOP"===a.status?t={status:"STOPPED"}:"PIZZA-NAME"===a.status?(t.status="PIZZA-NAMED",t.allThesePizzas=makeAllPizzasAsString(),console.log("This is all the pizza: \n",t.allThesePizzas)):t={status:"NOTHING"},postMessage(t)};
 //# sourceMappingURL=pizza-worker.js.map

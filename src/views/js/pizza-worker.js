@@ -1,21 +1,24 @@
 //Pizza making code
 importScripts("pizza-generator.js");
 
-this.onmessage = function(e) {
-  var messageObject = e.data;
-  var result = null;
-  var pizzaReady = "";
-  if (messageObject.status === "START"){
-	  pizzaReady = self.pizzaCompleted;
-	  result = {status: "STARTED"};
-  }else if (messageObject.status === "STOP"){
-	  result = {status: "STOPPED"};
-  }else if (messageObject.status === "PIZZA-NAME"){
-	  result = {status: "PIZZA-NAMED"};
-	  var rngNamedPizza = self.randomName();
-	  result = {rnp: rngNamedPizza, pizzaOrder: pizzaReady};
-  }else{
-	  result = {status: "NOTHING"};
-  }
-  this.postMessage(result);
+onmessage = function(e) {
+	var dataFromMain = e.data;
+	console.log('Data received from main: ', dataFromMain);
+	var result = {
+		status: "",
+		allThesePizzas: "not set"
+	};
+	var pizzaReady, rngNamedPizza = "";
+	if (dataFromMain.status === "START"){
+		result = {status: "STARTED"};
+	}else if (dataFromMain.status === "STOP"){
+		result = {status: "STOPPED"};
+	}else if (dataFromMain.status === "PIZZA-NAME"){
+		result.status = "PIZZA-NAMED";
+		result.allThesePizzas = makeAllPizzasAsString();
+		console.log('This is all the pizza: \n',result.allThesePizzas);
+	}else{
+		result = {status: "NOTHING"};
+	}
+	postMessage(result);
 };

@@ -15,74 +15,12 @@ Creator:
 Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
-var pizzaWithIngredients = "";
-var pizzaRandomlyNamed = "";
+
+
+
 //Relevant pizza making code moved to web-worker and associated script.
 var pizzaMakingWorker = new Worker("js/pizza-worker.js");
-
-pizzaMakingWorker.postMessage({status: 'PIZZA-NAME'});
   
- pizzaMakingWorker.onmessage = function(e){
-	var data = e.data;
-	  
-	if(data.status === "STARTED"){
-		console.log("Worker Started!");
-	}else if (data.status === "STOPPED"){
-		console.log("Worker Stopped!");
-		pizzaMakingWorker.terminate();
-	}else if (data.status === "PIZZA-NAMED"){
-		pizzaRandomlyNamed = data.rnp;
-		pizzaWithIngredients = data.pizzaOrder;
-	}else{
-		console.log(data.status);
-	  }
-  };
-
-// Returns a string with random pizza ingredients nested inside <li> tags
-var makeRandomPizza = function(pizza) {
-  return pizza;
-};
-
-// returns a DOM element for each pizza
-var pizzaElementGenerator = function(i, pizzaWithIngredients, rngPizzaName) {
-  var pizzaContainer,             // contains pizza title, image and list of ingredients
-      pizzaImageContainer,        // contains the pizza image
-      pizzaImage,                 // the pizza image itself
-      pizzaDescriptionContainer,  // contains the pizza title and list of ingredients
-      pizzaName,                  // the pizza name itself
-      ul;                         // the list of ingredients
-
-  pizzaContainer = document.createElement("div");
-  pizzaImageContainer = document.createElement("div");
-  pizzaImage = document.createElement("img");
-  pizzaDescriptionContainer = document.createElement("div");
-
-  pizzaContainer.classList.add("randomPizzaContainer");
-  pizzaContainer.style.width = "33.33%";
-  pizzaContainer.style.height = "325px";
-  pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
-  pizzaImageContainer.style.width="35%";
-
-  pizzaImage.src = "images/pizza.png";
-  pizzaImage.classList.add("img-responsive");
-  pizzaImageContainer.appendChild(pizzaImage);
-  pizzaContainer.appendChild(pizzaImageContainer);
-
-
-  pizzaDescriptionContainer.style.width="65%";
-
-  pizzaName = document.createElement("h4");
-  
-  pizzaName.innerHTML = rngPizzaName;
-  pizzaDescriptionContainer.appendChild(pizzaName);
-
-  ul = document.createElement("ul");
-  ul.innerHTML = makeRandomPizza();
-  pizzaDescriptionContainer.appendChild(ul);
-  pizzaContainer.appendChild(pizzaDescriptionContainer);
-
-  return pizzaContainer;
-};
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
@@ -135,10 +73,13 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+	//created variables to minimize amount of calls to querySelectorAll
+	var endIndex = document.querySelectorAll(".randomPizzaContainer").length;
+    for (var i = 0; i < endIndex; i++) {
+	  var elem = document.querySelectorAll(".randomPizzaContainer")[i];
+      var dx = determineDx(elem, size);
+      var newwidth = (elem.offsetWidth + dx) + 'px';
+      elem.style.width = newwidth;
     }
   }
 
@@ -153,11 +94,37 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
-  pizzasDiv.appendChild(pizzaElementGenerator(i, pizzaWithIngredients, pizzaRandomlyNamed));
-}
+// Moved for-loop to worker, sending message to worker to trigger relevant process.
+	pizzaMakingWorker.postMessage({
+		status: 'PIZZA-NAME',
+		allThesePizzas: ''
+	});
+	var pizzaToBeAppended = "";
+	pizzaMakingWorker.onmessage = function(e){
+		var data = e.data;
+		//console.log('Data returned from Worker: ', data);
+
+		if(data.status === "STARTED"){
+			console.log("Worker Started!");
+		}else if (data.status === "STOPPED"){
+			console.log("Worker Stopped!");
+			pizzaMakingWorker.terminate();
+		}else if (data.status === "PIZZA-NAMED"){
+			pizzaToBeAppended = data.allThesePizzas;
+			console.log('Pizza Menu Served.');
+		}else{
+			console.log('Why does our pizza have a name?.');
+		  }
+	};
+	// Implemented setTimeout to delay the appending of menu until element string is returned from worker.
+	setTimeout(function(){
+		var tempEl = document.createElement('div');
+			tempEl.innerHTML = pizzaToBeAppended;
+
+		var pizzasDiv = document.getElementById("randomPizzas");
+			pizzasDiv.appendChild(tempEl);
+	}, 1500);
+
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
@@ -177,6 +144,25 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
     sum = sum + times[i].duration;
   }
   console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
+}
+
+// implemented requestAnimationFrame as seen on http://www.html5rocks.com/en/tutorials/speed/animations/
+// declare variable for known scroll position
+var latestKnownScrollY = 0,
+ticking = false;
+
+// Callback for scroll event
+function onScroll() {
+  latestKnownScrollY = window.scrollY;
+  requestTick();
+}
+
+// calls requestAnimationFrame
+function requestTick() {
+  if(!ticking) {
+    window.requestAnimationFrame(updatePositions);
+  }
+  ticking = true;
 }
 
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
@@ -203,13 +189,22 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
+  window.ticking = false;
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+
+// runs updatePositions on scroll  
+// window.addEventListener('scroll', updatePositions);
+
+//replaced scroll event listener with requestAnimationFrame
+window.addEventListener('scroll', onScroll, false);
+
+//moved parent element outside of DOMContentLoaded event listener and into variable to optimize performance
+var masterPizzaContainer = document.querySelector("#movingPizzas1");
 
 // Generates the sliding pizzas when the page loads.
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(function() {
+
   var cols = 8;
   var s = 256;
   for (var i = 0; i < 200; i++) {
@@ -220,7 +215,16 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    masterPizzaContainer.appendChild(elem);
   }
-  updatePositions();
-});
+  
+  
+  // items variable moved here to make it accessible globally
+  window.items = document.querySelectorAll('.mover');
+  window.requestAnimationFrame(updatePositions);
+  
+  /*
+	I reviewed https://github.com/JordanFriesen/udacity-optimization-project/blob/gh-pages/views/js/main.js for more information on how to use requestAnimationFrame - the lectures available on Udacity were not the best, however, this lack of practical implementation made this project the most rewarding.
+  */
+  
+}));
