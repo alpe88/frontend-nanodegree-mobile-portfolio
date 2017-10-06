@@ -33,10 +33,11 @@ module.exports = function(grunt) {
   uglify: {
 	  options: {
 		sourceMap: true,
+		mangle: false,
 		// the banner is inserted at the top of the output
 		banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 	  },
-	  dist: {
+	  dest: {
 		files: {
 		  '<%= dist_path %>/js/main.js': ['<%= src_path %>/js/main.js'],
 		  '<%= dist_path %>/js/pizza-generator.js': ['<%= src_path %>/js/pizza-generator.js'],
@@ -75,7 +76,7 @@ module.exports = function(grunt) {
 	},
 	
 	jshint: {
-      files: ['Gruntfile.js', 'src/views/js/*'],
+      files: ['Gruntfile.js', 'src/views/js/*', 'dist/views/js/*'],
       options: {
         // options here to override JSHint defaults
         globals: {
