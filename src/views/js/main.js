@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(funct
   var s = 256;
   //moved image creation to outside of loop
   var elem = document.createElement('img');
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 24; i++) {
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
