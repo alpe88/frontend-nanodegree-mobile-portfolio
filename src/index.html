@@ -7,21 +7,7 @@
     <meta name="author" content="Aleksandar Petrovic">
     <title>Cameron Pittman: Portfolio</title>
 
-	<script async src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-	<script>
-	  WebFont.load({
-		google: {
-		  families: ['Open Sans:400,700']
-		}
-	  });
-	</script>
-    <script>
-      (function(w,g){w['GoogleAnalyticsObject']=g;
-      w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
-      // Optional TODO: replace with your Google Analytics profile ID.
-      ga('create', 'UA-XXXX-Y');
-      ga('send', 'pageview');
-    </script>
+	
   </head>
 
   <body style="margin: 0; font-size: 14px; line-height: 1.61; font-weight: 400;background: #fff;">
@@ -56,14 +42,14 @@
           </li>
 
           <li>
-            <img style="width: 100px; height: 50px;" src="views/images/pizzeria.jpg">
+            <img style="width: 100px; height: 50px;" src="views/images/pizzeria-100.jpg">
             <a href="views/pizza.html">Cam's Pizzeria</a>
             <p>Who wants a performant pizza?</p>
           </li>
         </ul>
       </div>
 
-      <footer style="max-width: 45em; margin: 0 auto;">>
+      <footer style="max-width: 45em; margin: 0 auto;">
         <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
       </footer>
     </div>
@@ -83,6 +69,21 @@
           webkitRequestAnimationFrame || msRequestAnimationFrame;
       if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
       else window.addEventListener('load', loadDeferredStyles);
+    </script>
+	<script async src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+	<script>
+	  WebFont.load({
+		google: {
+		  families: ['Open Sans:400,700']
+		}
+	  });
+	</script>
+	<script>
+      (function(w,g){w['GoogleAnalyticsObject']=g;
+      w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
+      // Optional TODO: replace with your Google Analytics profile ID.
+      ga('create', 'UA-XXXX-Y');
+      ga('send', 'pageview');
     </script>
 	<script async src="http://www.google-analytics.com/analytics.js"></script>
 	<script async src="js/perfmatters.js"></script>

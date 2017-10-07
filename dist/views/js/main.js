@@ -28,15 +28,17 @@ var resizePizzas = function(size) {
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
+	//Changed from querySelectorAll to getElementById as the call is faster.
+	var elem = document.getElementById('pizzaSize');
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        elem.innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        elem.innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        elem.innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -73,10 +75,11 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-	//created variables to minimize amount of calls to querySelectorAll
-	var endIndex = document.querySelectorAll(".randomPizzaContainer").length;
+	//leveraged getElementsByClassName as the call is faster than querySelectorAll
+	var randPizzaElement = document.getElementsByClassName('randomPizzaContainer');
+	var endIndex = randPizzaElement.length;
     for (var i = 0; i < endIndex; i++) {
-	  var elem = document.querySelectorAll(".randomPizzaContainer")[i];
+	  var elem = randPizzaElement[i];
       var dx = determineDx(elem, size);
       var newwidth = (elem.offsetWidth + dx) + 'px';
       elem.style.width = newwidth;
@@ -173,10 +176,10 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.getElementsByClassName('mover');
+  // document.body.scrollTop is no longer supported in Chrome.
+  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
   for (var i = 0; i < items.length; i++) {
-    // document.body.scrollTop is no longer supported in Chrome.
-    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     var phase = Math.sin((scrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
@@ -200,15 +203,16 @@ function updatePositions() {
 window.addEventListener('scroll', onScroll, false);
 
 //moved parent element outside of DOMContentLoaded event listener and into variable to optimize performance
-var masterPizzaContainer = document.querySelector("#movingPizzas1");
+var masterPizzaContainer = document.getElementById("movingPizzas1");
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(function() {
 
   var cols = 8;
   var s = 256;
+  //moved image creation to outside of loop
+  var elem = document.createElement('img');
   for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
@@ -220,7 +224,7 @@ document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(funct
   
   
   // items variable moved here to make it accessible globally
-  window.items = document.querySelectorAll('.mover');
+  window.items = document.getElementsByClassName('mover');
   window.requestAnimationFrame(updatePositions);
   
   /*
