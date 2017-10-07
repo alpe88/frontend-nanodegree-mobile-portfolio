@@ -211,12 +211,12 @@ document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(funct
  var cols = 8;
   //adding rows to dynamically recalculate the needed amount based on screen height at load time.
   var rows = Math.floor(screen.height / s);
-  var numPizzasNeededAtLoad = cols * rows
+  var numPizzasNeededAtLoad = cols * rows;
   var s = 256;
   
   //moved image creation to outside of loop
   var elem = document.createElement('img');
-  for (var i = 0; i < numPizzasNeededAtLoad; i++) {
+  for (var i = 0; i <= numPizzasNeededAtLoad; i++) {
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
