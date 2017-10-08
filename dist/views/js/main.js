@@ -78,10 +78,12 @@ var resizePizzas = function(size) {
 	//leveraged getElementsByClassName as the call is faster than querySelectorAll
 	var randPizzaElement = document.getElementsByClassName("randomPizzaContainer");
 	var endIndex = randPizzaElement.length;
+	//moved size determining variables outside of the loop
+	var dx = determineDx(elem, size);
+    //var newwidth = (elem.offsetWidth + dx) + 'px';
+	var newwidth = randPizzaElement[0] + 'px';
     for (var i = 0; i < endIndex; i++) {
 	  var elem = randPizzaElement[i];
-      var dx = determineDx(elem, size);
-      var newwidth = (elem.offsetWidth + dx) + 'px';
       elem.style.width = newwidth;
     }
   }

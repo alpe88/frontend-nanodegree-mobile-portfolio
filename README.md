@@ -13,3 +13,21 @@ Third: Run Locally
 1. Download repo from https://github.com/alpe88/frontend-nanodegree-mobile-portfolio
 2. Start your local server pointed at the dist/views folder
 3. Navigate to pizza.html file via the server
+
+
+
+
+##Changes made:
+	Index:
+		-minified assets
+		-applied core styles as inline
+		-deferred css calls per Google PageSpeed suggestion
+		-deferred js calls where appropriate
+		-applied loading of WebFonts per Google PageSpeed suggestion
+
+	Pizza:
+		-replaced any querySelector and querySelectorAll calls with getElementById or getElementsByClassName
+		-moved variable declarations outside of loops where appropriate - i.e.: background pizza generation logic
+		-moved all of pizza html creation logic to WebWorker
+		-using animation frames to update positions
+	
