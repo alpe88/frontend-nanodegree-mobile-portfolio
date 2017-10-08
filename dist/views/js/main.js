@@ -215,9 +215,10 @@ document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(funct
   var s = 256;
   
   //moved image creation to outside of loop
-  var elem = document.createElement('img');
+  var elem = undefined;
   for (var i = 0; i <= numPizzasNeededAtLoad; i++) {
-    elem.className = 'mover';
+    elem = document.createElement('img');
+	elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
