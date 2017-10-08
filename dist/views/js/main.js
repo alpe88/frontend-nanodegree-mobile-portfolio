@@ -29,7 +29,7 @@ var resizePizzas = function(size) {
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
 	//Changed from querySelectorAll to getElementById as the call is faster.
-	var elem = document.getElementById('pizzaSize');
+	var elem = document.getElementById("pizzaSize");
     switch(size) {
       case "1":
         elem.innerHTML = "Small";
@@ -76,7 +76,7 @@ var resizePizzas = function(size) {
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
 	//leveraged getElementsByClassName as the call is faster than querySelectorAll
-	var randPizzaElement = document.getElementsByClassName('randomPizzaContainer');
+	var randPizzaElement = document.getElementsByClassName("randomPizzaContainer");
 	var endIndex = randPizzaElement.length;
     for (var i = 0; i < endIndex; i++) {
 	  var elem = randPizzaElement[i];
@@ -176,7 +176,7 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.getElementsByClassName('mover');
+  var items = document.getElementsByClassName("mover");
   // document.body.scrollTop is no longer supported in Chrome.
   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
   for (var i = 0; i < items.length; i++) {
@@ -207,29 +207,29 @@ var masterPizzaContainer = document.getElementById("movingPizzas1");
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', window.requestAnimationFrame(function() {
-
- var cols = 8;
-  //adding rows to dynamically recalculate the needed amount based on screen height at load time.
-  var rows = Math.floor(screen.height / s);
-  var numPizzasNeededAtLoad = cols * rows;
-  var s = 256;
-  
-  //moved image creation to outside of loop
-  var elem = undefined;
-  for (var i = 0; i <= numPizzasNeededAtLoad; i++) {
-    elem = document.createElement('img');
-	elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    masterPizzaContainer.appendChild(elem);
-  }
+	var s = 256;
+	var h = screen.height;
+	var cols = 8;
+	//adding rows to dynamically recalculate the needed amount based on screen height at load time.
+	var rows = Math.floor(h / s);
+	var l = cols * rows;
+	var elem = '';
+	  //moved image element var to outside of loop
+	for (var i = 0; i <= l; i++) {
+		elem = document.createElement("img");
+		elem.className = 'mover';
+		elem.src = "images/pizza.png";
+		elem.style.height = "100px";
+		elem.style.width = "73.333px";
+		elem.basicLeft = (i % cols) * s;
+		elem.style.top = (Math.floor(i / cols) * s) + 'px';
+		masterPizzaContainer.appendChild(elem);
+		console.log(elem);
+	  }
   
   
   // items variable moved here to make it accessible globally
-  window.items = document.getElementsByClassName('mover');
+  window.items = document.getElementsByClassName("mover");
   window.requestAnimationFrame(updatePositions);
   
   /*
